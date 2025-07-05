@@ -1,83 +1,146 @@
 import { Carousel, Modal, ModalBody } from "flowbite-react";
-import React from 'react'
 import mobile from '../../assets/mobile.svg'
 import guitar from '../../assets/guita.png'
 import love from '../../assets/love.png'
 import avatar from '../../assets/avatar.png'
 import close from '../../assets/close.svg'
 import google from '../../assets/google.png'
+import { signInWithPopup } from "firebase/auth";
+import {auth,provider} from "../Firebase/Firebase";
 
-const Login = ({toggleModal,status}) => {
+const Login = ({ toggleModal, status }) => {
+  const handleClick = async()=>{
+    try {
+      const result = await signInWithPopup(auth,provider);
+      toggleModal(); 
+      console.log('User', result.user);
+      
+
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
   return (
-    <div>
-      <Modal theme={{
-        'content':{
-          'base':'relative w-full p-4 md:h-auto',
-          'inner':'relative flex max-h-[900dvh] flex-col rounded-lg bg-white shadow dark:bg-gray-700'
+    <Modal
+      show={status}
+      onClick={toggleModal}
+      size="md"
+      position="center"
+      popup
+      className="z-50"
+      theme={{
+        content: {
+          base: "relative w-full max-w-md p-0 md:h-auto",
+          inner:
+            "relative flex flex-col rounded-lg bg-white shadow dark:bg-gray-700",
         },
       }}
-      onClick={toggleModal} show={status} className="bg-black rounded-none" position={"center"} size="md" popup={true}>
-        <div onClick={(event)=>{event.stopPropagation()}} className="p-6 pl-2 pr-2 bg-white">
-          <img onClick={toggleModal} src={close} alt="" className="w-6 absolute z-10 top-4 right-4 cursor-pointer" />
+    >
+      {/* Modal content */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-t-lg relative"
+      >
+        {/* Close button */}
+        <img
+          onClick={toggleModal}
+          src={close}
+          alt="close"
+          className="w-6 absolute top-4 right-4 z-10 cursor-pointer"
+        />
 
-          <Carousel slide={false} theme={{
-            "indicators":{
-              "active":{
-                "off":"bg-gray-300",
-                "on":"bg-teal-300"
+        {/* Carousel */}
+        <Carousel
+          slide={false}
+          onClick={(e) => e.stopPropagation()}
+          className="w-full h-56 rounded-t-lg"
+          theme={{
+            indicators: {
+              active: {
+                off: "bg-gray-300",
+                on: "bg-teal-300",
               },
-              "base":"h-2 w-2 rounded-full",
-              "wrapper":"absolute bottom-2 left-1/2 flex-translate-x-1/2 space-x-3"
+              base: "h-2 w-2 rounded-full",
+              wrapper:
+                "absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-3",
             },
-            "scrollContainer":{
-              "base":"flex h-full snap-mandatory overflow-y-hidden overflow-x-scroll scroll-smooth",
-              "snap":"snap-x"
+            scrollContainer: {
+              base: "flex h-full snap-mandatory overflow-y-hidden overflow-x-scroll scroll-smooth",
+              snap: "snap-x",
             },
-            "control":{
-              "base":"inline-flex items-center justify-center bg-transparent",
-              "icon":"w-8 text-white dark:text-black"
+            control: {
+              base: "inline-flex items-center justify-center bg-transparent",
+              icon: "w-8 text-black dark:text-black",
             },
-          }} onClick={(event)=>{event.stopPropagation()}} className="w-full h-56 pb-5 rounded-none">
-            <div className="flex flex-col items -center justify-center">
-              <img className="w-24 pb-5" src={guitar} alt="Car Image 1" />
-              <p style={{color:"#002f34"}} className="w-60 sm:w-72 text-center pb-5 font-semibold">Help us become one of the safest place to buy and sel</p>
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <img className="w-24 pb-5" src={love} alt="Car Image 2" />
-              <p style={{color:'#002f34'}} className="w-60 sm:w-72 text-center pb-5 font-semibold">Close deals from the comfort of your home.</p>
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <img className="w-24 pb-5" src={avatar} alt="Car Image 3" />
-              <p style={{color:'#002f34'}} className="w-60 sm:w-72 text-center pb-5 font-semibold">Keep all your favourite in one place. </p>
-            </div>
-
-          </Carousel>
-        </div>
-
-        <ModalBody className="bg-white h-96 p-0 rounded-none" onClick={(event)=>{event.stopPropagation()}}>
-          <div className="p-6 pt-0">
-            <div className="flex items-center justify-center rounded-md border-2 border-solid border-gray-300 p-5 relative h-8 cursor-pointer active:bg-teal-100">
-              <img className="w-7 absolute left-2" src={google} alt="" />
-              <p className="text-sm text-gray-500" >Continue with Google</p>
-            </div>
-
-            <div className="pt-5 flex flex-col items-center justify-center">
-              <p className="font-semibold text-sm" >OR</p>
-              <p className="font-bold text-sm pt-3 underline underline-offset-4">Login with Email</p>
-            </div>
-            <div className="pt-10 sm:pt-20 flex flex-col items-center justify-center">
-              <p className="text-xs">All your personal details are safe with us.</p>
-              <p className="text-xs pt-5 text-center">if you Continue, you are accepting <span className="text-blue-600">OLX terms and conditions and privacy policy</span></p>
-
-            </div>
+          }}
+        >
+          {/* Slide 1 */}
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <img className="w-20 pb-3" src={guitar} alt="Image 1" />
+            <p className="text-xs sm:text-sm font-medium text-[#002f34] break-words">
+              Help us become one of the safest places to buy and sell.
+            </p>
           </div>
-        </ModalBody>
-        <div>
-            <p>this is your modal</p>
-        </div>
-        </Modal>
-    </div>
-  )
-}
 
-export default Login
+          {/* Slide 2 */}
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <img className="w-20 pb-3" src={love} alt="Image 2" />
+            <p className="text-xs sm:text-sm font-medium text-[#002f34] break-words">
+              Close deals from the comfort of your home.
+            </p>
+          </div>
+
+          {/* Slide 3 */}
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <img className="w-20 pb-3" src={avatar} alt="Image 3" />
+            <p className="text-xs sm:text-sm font-medium text-[#002f34] break-words">
+              Keep all your favorites in one place.
+            </p>
+          </div>
+        </Carousel>
+      </div>
+
+      {/* Modal Body */}
+      <ModalBody
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white px-6 py-5 max-h-[70vh] overflow-y-auto rounded-b-lg"
+      >
+        <div className="space-y-5">
+          {/* Continue with Phone */}
+          <div className="flex items-center justify-start border-2 border-black p-3 rounded-md cursor-pointer">
+            <img className="w-5 mr-2" src={mobile} alt="mobile" />
+            <p className="text-sm font-bold">Continue with phone</p>
+          </div>
+
+          {/* Continue with Google */}
+          <div className="relative flex items-center justify-center border border-gray-300 p-3 rounded-md cursor-pointer hover:bg-gray-100" onClick={handleClick}>
+            <img src={google} alt="google" className="w-5 h-5 absolute left-3" />
+            <p className="text-sm text-gray-700">Continue with Google</p>
+          </div>
+
+          {/* OR */}
+          <div className="text-center">
+            <p className="text-sm font-semibold">OR</p>
+            <p className="text-sm font-bold pt-2 underline underline-offset-4">
+              Login with Email
+            </p>
+          </div>
+
+          {/* Footer Note */}
+          <div className="text-center text-[10px] text-gray-600 space-y-2">
+            <p>All your personal details are safe with us.</p>
+            <p>
+              If you continue, you are accepting{" "}
+              <span className="text-blue-600">
+                OLX terms and conditions and privacy policy
+              </span>.
+            </p>
+          </div>
+        </div>
+      </ModalBody>
+    </Modal>
+  );
+};
+
+export default Login;
